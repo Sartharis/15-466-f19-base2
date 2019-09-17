@@ -5,6 +5,7 @@
 
 #include "GL.hpp"
 #include "gl_errors.hpp"
+#include <random>
 
 //for glm::value_ptr() :
 #include <glm/gtc/type_ptr.hpp>
@@ -153,16 +154,51 @@ DrawSprites::DrawSprites(
 	//DEBUG: std::cout << glm::to_string(to_clip) << std::endl;
 }
 
-void DrawSprites::draw(Sprite const &sprite, glm::vec2 const &center, float scale, glm::u8vec4 const &tint) {
-	glm::vec2 min = center + scale * (sprite.min_px - sprite.anchor_px);
-	glm::vec2 max = center + scale * (sprite.max_px - sprite.anchor_px);
+void DrawSprites::draw_absolute( Sprite const &sprite, glm::vec2 const &min, glm::vec2 const &max, glm::u8vec4 const &tint ) {
+	glm::vec2 min_tc = sprite.min_px / glm::vec2( atlas.tex_size );
+	glm::vec2 max_tc = sprite.max_px / glm::vec2( atlas.tex_size );
+
+	/*if( mode == AlignPixelPerfect ) {
+		//nudge min/max so that pixels line up just ~just so~
+		//notably, want nearest pixel center to anchor to line up on a pixel center:
+		glm::vec2 c = center;
+		glm::vec2 ofs = ( glm::floor( sprite.anchor_px ) + glm::vec2( 0.5f ) ) - sprite.anchor_px;
+		//move c to nearest pixel center:
+		c += ofs * scale;
+		//make sure c is on a pixel center:
+		c = glm::floor( c ) + glm::vec2( 0.5f );
+		//move c back to anchor:
+		c -= ofs * scale;
+
+		//recompute sprite location:
+		min = c + scale * ( sprite.min_px - sprite.anchor_px );
+		max = c + scale * ( sprite.max_px - sprite.anchor_px );
+	}*/
+
+	//you may recognize this from draw_rectangle in base0:
+	//split rectangle into two triangles:
+	attribs.emplace_back( glm::vec2( min.x, min.y ), glm::vec2( min_tc.x, min_tc.y ), tint );
+	attribs.emplace_back( glm::vec2( max.x, min.y ), glm::vec2( max_tc.x, min_tc.y ), tint );
+	attribs.emplace_back( glm::vec2( max.x, max.y ), glm::vec2( max_tc.x, max_tc.y ), tint );
+
+	attribs.emplace_back( glm::vec2( min.x, min.y ), glm::vec2( min_tc.x, min_tc.y ), tint );
+	attribs.emplace_back( glm::vec2( max.x, max.y ), glm::vec2( max_tc.x, max_tc.y ), tint );
+	attribs.emplace_back( glm::vec2( min.x, max.y ), glm::vec2( min_tc.x, max_tc.y ), tint );
+
+}
+
+void DrawSprites::draw(Sprite const &sprite, glm::vec2 const &center, float scale, float shake /*= 0.0f*/, glm::u8vec4 const &tint ) {
+	static std::mt19937 mt;
+	glm::vec2 shake_offset = shake * glm::vec2( ( mt() / float( mt.max() ) ) - 0.5f, ( mt() / float( mt.max() ) ) - 0.5f );
+	glm::vec2 min = center + scale * (sprite.min_px - sprite.anchor_px) + shake_offset;
+	glm::vec2 max = center + scale * (sprite.max_px - sprite.anchor_px) + shake_offset;
 	glm::vec2 min_tc = sprite.min_px / glm::vec2(atlas.tex_size);
 	glm::vec2 max_tc = sprite.max_px / glm::vec2(atlas.tex_size);
 
 	if (mode == AlignPixelPerfect) {
 		//nudge min/max so that pixels line up just ~just so~
 		//notably, want nearest pixel center to anchor to line up on a pixel center:
-		glm::vec2 c = center;
+		glm::vec2 c = center + shake_offset;
 		glm::vec2 ofs = (glm::floor(sprite.anchor_px) + glm::vec2(0.5f)) - sprite.anchor_px;
 		//move c to nearest pixel center:
 		c += ofs * scale;
@@ -188,11 +224,11 @@ void DrawSprites::draw(Sprite const &sprite, glm::vec2 const &center, float scal
 
 }
 
-void DrawSprites::draw_text(std::string const &text, glm::vec2 const &anchor, float scale, glm::u8vec4 const &tint, glm::vec2 *anchor_out) {
+void DrawSprites::draw_text(std::string const &text, glm::vec2 const &anchor, float scale, float shake /*= 1.0f*/, glm::u8vec4 const &tint, glm::vec2 *anchor_out ) {
 	glm::vec2 moving_anchor = anchor;
 	for (size_t pos = 0; pos < text.size(); pos++){
 		Sprite const &chr = atlas.lookup(text.substr(pos,1));
-		draw(chr, moving_anchor, scale, tint);
+		draw(chr, moving_anchor, scale, shake, tint);
 		moving_anchor.x += (chr.max_px.x - chr.min_px.x + 1) * scale;
 	}
 

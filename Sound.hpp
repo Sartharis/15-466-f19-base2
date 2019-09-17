@@ -82,7 +82,8 @@ void shutdown(); //call Sound::shutdown() from main.cpp to gracefully(-ish) exit
 std::shared_ptr< PlayingSample > play(
 	Sample const &sample,
 	float volume = 1.0f,
-	float pan = 0.0f //-1.0f == hard left, 1.0f == hard right
+	float pan = 0.0f, //-1.0f == hard left, 1.0f == hard right
+	float start_point = 0.0f // 0 == beginning, 1 == end
 );
 
 //"panic button" to shut off all currently playing sounds:

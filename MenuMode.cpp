@@ -130,7 +130,7 @@ void MenuMode::draw(glm::uvec2 const &drawable_size) {
 			if (!item.sprite) {
 				//draw item.name as text:
 				draw_sprites.draw_text(
-					item.name, item.at, item.scale, color
+					item.name, item.at, item.scale, 0.0f, color
 				);
 				glm::vec2 min,max;
 				draw_sprites.get_text_extents(
@@ -139,16 +139,16 @@ void MenuMode::draw(glm::uvec2 const &drawable_size) {
 				left = min.x;
 				right = max.x;
 			} else {
-				draw_sprites.draw(*item.sprite, item.at, item.scale, color);
+				draw_sprites.draw(*item.sprite, item.at, item.scale, 0.0f, color);
 				left = item.at.x + item.scale * (item.sprite->min_px.x - item.sprite->anchor_px.x);
 				right = item.at.x + item.scale * (item.sprite->max_px.x - item.sprite->anchor_px.x);
 			}
 			if (is_selected) {
 				if (left_select) {
-					draw_sprites.draw(*left_select, glm::vec2(left - bounce, item.at.y), item.scale, left_select_tint);
+					draw_sprites.draw(*left_select, glm::vec2(left - bounce, item.at.y), item.scale, 0.0f, left_select_tint);
 				}
 				if (right_select) {
-					draw_sprites.draw(*right_select, glm::vec2(right + bounce, item.at.y), item.scale, right_select_tint);
+					draw_sprites.draw(*right_select, glm::vec2(right + bounce, item.at.y), item.scale, 0.0f, right_select_tint);
 				}
 			}
 			

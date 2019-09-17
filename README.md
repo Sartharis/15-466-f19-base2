@@ -1,8 +1,8 @@
-# (TODO: your game's title)
+# Water Filler
 
-Author: (TODO: your name)
+Author: Jan Orlowski
 
-Design: (TODO: In two sentences or fewer, describe what is new and interesting about your game.)
+Design: Use the sound of the water filling up a bottle to determine when it is full!
 
 Screen Shot:
 
@@ -10,10 +10,10 @@ Screen Shot:
 
 How To Play:
 
-(TODO: describe the controls and (if needed) goals/strategy.)
+Use mouse to control bottle position. Put bottle underwater to fill it. If overfilled, the bottle is dropped. Move bottle to left or right edge of screen to give bottle. Try to get bottle as filled as possible without losing it!
 
 Sources:
 
-(TODO: fill in information about the sources of any **artwork** or **sounds** you used in the game that you did not create yourself. Feel free to also credit yourself for things you did make.)
+All art was made by me and all sound was recorded by me. Only exception is the text font, which was made by Jim McCann for 15-466.
 
 This game was built with [NEST](NEST.md).

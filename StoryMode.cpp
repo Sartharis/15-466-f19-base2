@@ -44,9 +44,9 @@ Load< SpriteAtlas > sprites(LoadTagDefault, []() -> SpriteAtlas const * {
 	return ret;
 });
 
-Load< Sound::Sample > music_cold_dunes(LoadTagDefault, []() -> Sound::Sample * {
+/*Load< Sound::Sample > music_cold_dunes(LoadTagDefault, []() -> Sound::Sample * {
 	return new Sound::Sample(data_path("cold-dunes.opus"));
-});
+});*/
 
 StoryMode::StoryMode() {
 }
@@ -67,7 +67,7 @@ void StoryMode::update(float elapsed) {
 	}
 
 	if (!background_music || background_music->stopped) {
-		background_music = Sound::play(*music_cold_dunes, 1.0f);
+		//background_music = Sound::play(*music_cold_dunes, 1.0f);
 	}
 }
 

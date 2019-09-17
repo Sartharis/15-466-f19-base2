@@ -2,7 +2,7 @@
 #include "Mode.hpp"
 
 //Starting mode:
-#include "StoryMode.hpp"
+#include "WaterMode.hpp"
 
 //Deal with calling resource loading functions:
 #include "Load.hpp"
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
 
 	//create window:
 	SDL_Window *window = SDL_CreateWindow(
-		"gp19 the planet of choices", //TODO: remember to set a title for your game!
+		"gp19 water filler", //TODO: remember to set a title for your game!
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		512, 448, //TODO: modify window size if you'd like
 		SDL_WINDOW_OPENGL
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 	call_load_functions();
 
 	//------------ create game mode + make current --------------
-	Mode::set_current(std::make_shared< StoryMode >());
+	Mode::set_current(std::make_shared< WaterMode >());
 
 	//------------ main loop ------------
 

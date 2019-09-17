@@ -107,9 +107,10 @@ void Sound::unlock() {
 	if (device) SDL_UnlockAudioDevice(device);
 }
 
-std::shared_ptr< Sound::PlayingSample > Sound::play(Sample const &sample, float pan, float volume) {
+std::shared_ptr< Sound::PlayingSample > Sound::play(Sample const &sample, float pan, float volume, float start_point) {
 	std::shared_ptr< Sound::PlayingSample > playing_sample = std::make_shared< Sound::PlayingSample >(sample, pan, volume);
 	lock();
+	playing_sample->i = (int)( std::floorf( start_point * (float)( playing_sample->data.size() ) ) );
 	playing_samples.emplace_back(playing_sample);
 	unlock();
 	return playing_sample;
